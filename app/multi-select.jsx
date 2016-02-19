@@ -1,47 +1,18 @@
 import React from 'react';
-import classNames from 'classnames/bind';
 
 const key = {
   up: 38,
   down: 40
 };
 
-class ListItem extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hovered: false
-    };
-  }
-
-  _onClick() {
-    this.props.handleClick();
-  }
-
-  _onMouseOver() {
-    this.props.handleMouseOver();
-  }
-
-  _onMouseOut() {
-    this.props.handleMouseOut();
-  }
-
-  render() {
-    let classes = classNames({
-      'selected': this.props.selected
-    });
-
-    return (
-      <div onClick={this._onClick.bind(this)}
-           onMouseOver={this._onMouseOver.bind(this)}
-           onMouseOut={this._onMouseOut.bind(this)}
-           className={classes}>
-        {this.props.children}
-      </div>
-    );
-  }
-}
+const ListItem = ({handleClick, handleMouseOver, handleMouseOut, selected, children}) => (
+  <div onClick={handleClick}
+    onMouseOver={handleMouseOver}
+    onMouseOut={handleMouseOut}
+    className={selected ? 'selected' : ''} >
+    {children}
+  </div>
+);
 
 class MultiComplete extends React.Component {
   constructor(props) {
