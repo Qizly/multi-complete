@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom'
 import classNames from 'classnames/bind';
 
 const key = {
@@ -60,10 +61,14 @@ class MultiComplete extends React.Component {
 
   _onChange(e) {
     let str = e.target.value;
-    let matches = this.props.list.filter(item =>
-      item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
+    let matches = [];
 
-    this.setState({ str, matches });
+    if (str.length > 0) {
+      matches = this.props.list.filter(item =>
+        item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
+    }
+
+    this.setState({ str, matches, selectedIndex: -1 });
   }
 
   _onKeyDown(e) {
@@ -71,9 +76,18 @@ class MultiComplete extends React.Component {
     let selectedIndex = this.state.selectedIndex;
 
     if (selectedIndex > 0 && keyCode === key.up) {
-      this.setState({ selectedIndex: selectedIndex - 1 });
+      e.preventDefault();
+
+      this.setState({
+        selectedIndex: selectedIndex - 1,
+        str: this.state.matches[selectedIndex - 1]
+      });
     } else if (selectedIndex < this.state.matches.length - 1 && keyCode === key.down) {
-      this.setState({ selectedIndex: selectedIndex + 1 });
+      e.preventDefault();
+      
+      this.setState({ selectedIndex: selectedIndex + 1,
+        str: this.state.matches[selectedIndex + 1]
+      });
     } else if (e.key === 'Enter') {
       if (selectedIndex !== -1) {
         this.setState({
