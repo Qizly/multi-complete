@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom'
 import classNames from 'classnames/bind';
 
 const key = {
@@ -77,17 +76,10 @@ class MultiComplete extends React.Component {
 
     if (selectedIndex > 0 && keyCode === key.up) {
       e.preventDefault();
-
-      this.setState({
-        selectedIndex: selectedIndex - 1,
-        str: this.state.matches[selectedIndex - 1]
-      });
+      this.setState({ selectedIndex: selectedIndex - 1 });
     } else if (selectedIndex < this.state.matches.length - 1 && keyCode === key.down) {
       e.preventDefault();
-      
-      this.setState({ selectedIndex: selectedIndex + 1,
-        str: this.state.matches[selectedIndex + 1]
-      });
+      this.setState({ selectedIndex: selectedIndex + 1 });
     } else if (e.key === 'Enter') {
       if (selectedIndex !== -1) {
         this.setState({
@@ -116,10 +108,10 @@ class MultiComplete extends React.Component {
           value={this.state.str}
         />
         <div>
-          {this.state.matches.map((item, index)  =>
+          {this.state.matches.map((item, index) =>
             <ListItem key={item}
-                      selected={this.state.selectedIndex === index}
-                      handleClick={this.handleClick.bind(this, index)} >
+              selected={this.state.selectedIndex === index}
+              handleClick={this.handleClick.bind(this, index)} >
               {item}
             </ListItem>)}
         </div>
