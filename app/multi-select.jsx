@@ -15,6 +15,22 @@ const ListItem = ({onClick, onMouseOver, onMouseOut, selected, children}) => (
   </div>
 );
 
+ListItem.propTypes = {
+  onClick: React.PropTypes.func.isRequired,
+  onMouseOver: React.PropTypes.func.isRequired,
+  onMouseOut: React.PropTypes.func.isRequired,
+  selected: React.PropTypes.bool.isRequired,
+  children: function (props, propName, componentName) {
+    let prop = props[propName];
+
+    if (React.Children.count(prop) !== 1 || typeof prop !== 'string') {
+      return new Error(
+        `\`${componentName}\` should have a single child of type string`
+      );
+    }
+  }
+}
+
 class MultiComplete extends React.Component {
   constructor(props) {
     super(props);
@@ -32,11 +48,11 @@ class MultiComplete extends React.Component {
   _onChange(e) {
     let str = e.target.value;
     let matches = [];
+    let {list} = this.props;
 
     if (str.length > 0) {
-      matches = this.props.list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
+      matches = list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
     }
-
     this.setState({ str, matches, selectedIndex: -1 });
   }
 
@@ -45,12 +61,21 @@ class MultiComplete extends React.Component {
     let selectedIndex = this.state.selectedIndex;
 
     if (selectedIndex > 0 && keyCode === key.up) {
+      
       e.preventDefault();
-      this.setState({ selectedIndex: selectedIndex - 1 });
+      this.setState({ 
+        selectedIndex: selectedIndex - 1 
+      });
+      
     } else if (selectedIndex < this.state.matches.length - 1 && keyCode === key.down) {
+      
       e.preventDefault();
-      this.setState({ selectedIndex: selectedIndex + 1 });
+      this.setState({
+        selectedIndex: selectedIndex + 1
+      });
+      
     } else if (e.key === 'Enter') {
+      
       if (selectedIndex !== -1) {
         this.setState({
           str: this.state.matches[selectedIndex],
@@ -92,12 +117,16 @@ class MultiComplete extends React.Component {
               onMouseOver={this._onMouseOver.bind(this, index)}
               onMouseOut={this._onMouseOut.bind(this, index)} 
             >
-              {item}
+            {item}
             </ListItem>)}
         </div>
       </div>
     );
   }
 }
+
+MultiComplete.propTypes = {
+  list: React.PropTypes.array.isRequired
+};
 
 export default MultiComplete;
