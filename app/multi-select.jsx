@@ -20,17 +20,16 @@ class ListItem extends React.Component {
   }
 
   _onMouseOver() {
-    this.setState({ hovered: true });
+    this.props.handleMouseOver();
   }
 
   _onMouseOut() {
-    this.setState({ hovered: false });
+    this.props.handleMouseOut();
   }
 
   render() {
     let classes = classNames({
-      'selected': this.props.selected,
-      'hovered': this.state.hovered
+      'selected': this.props.selected
     });
 
     return (
@@ -97,6 +96,14 @@ class MultiComplete extends React.Component {
       matches: []
     });
   }
+  
+  handleMouseOver(index) {
+    this.setState({ selectedIndex: index });
+  }
+  
+  handleMouseOut(index) {
+    this.setState({ selectedIndex: -1 });
+  }
 
   render() {
     return (
@@ -111,7 +118,9 @@ class MultiComplete extends React.Component {
           {this.state.matches.map((item, index) =>
             <ListItem key={item}
               selected={this.state.selectedIndex === index}
-              handleClick={this.handleClick.bind(this, index)} >
+              handleClick={this.handleClick.bind(this, index)}
+              handleMouseOver={this.handleMouseOver.bind(this, index)}
+              handleMouseOut={this.handleMouseOut.bind(this, index)} >
               {item}
             </ListItem>)}
         </div>
