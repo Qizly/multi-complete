@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames/bind';
 
 const key = {
   up: 38,
@@ -6,14 +7,37 @@ const key = {
 };
 
 class ListItem extends React.Component {
-  _onClick(e) {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      hovered: false
+    };
+  }
+
+  _onClick() {
     this.props.handleClick();
   }
 
+  _onMouseOver() {
+    this.setState({ hovered: true });
+  }
+
+  _onMouseOut() {
+    this.setState({ hovered: false });
+  }
+
   render() {
+    let classes = classNames({
+      'selected': this.props.selected,
+      'hovered': this.state.hovered
+    });
+
     return (
       <div onClick={this._onClick.bind(this)}
-           className={this.props.selected ? 'selected' : 'unselected'}>
+           onMouseOver={this._onMouseOver.bind(this)}
+           onMouseOut={this._onMouseOut.bind(this)}
+           className={classes}>
         {this.props.children}
       </div>
     );
