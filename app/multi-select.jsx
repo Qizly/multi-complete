@@ -5,11 +5,12 @@ const key = {
   down: 40
 };
 
-const ListItem = ({handleClick, handleMouseOver, handleMouseOut, selected, children}) => (
-  <div onClick={handleClick}
-    onMouseOver={handleMouseOver}
-    onMouseOut={handleMouseOut}
-    className={selected ? 'selected' : ''} >
+const ListItem = ({onClick, onMouseOver, onMouseOut, selected, children}) => (
+  <div onClick={onClick} 
+    onMouseOver={onMouseOver}
+    onMouseOut={onMouseOut} 
+    className={selected ? 'selected' : ''} 
+  >
     {children}
   </div>
 );
@@ -33,8 +34,7 @@ class MultiComplete extends React.Component {
     let matches = [];
 
     if (str.length > 0) {
-      matches = this.props.list.filter(item =>
-        item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
+      matches = this.props.list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
     }
 
     this.setState({ str, matches, selectedIndex: -1 });
@@ -61,18 +61,18 @@ class MultiComplete extends React.Component {
     }
   }
 
-  handleClick(index) {
+  _onClick(index) {
     this.setState({
       str: this.state.matches[index],
       matches: []
     });
   }
   
-  handleMouseOver(index) {
+  _onMouseOver(index) {
     this.setState({ selectedIndex: index });
   }
   
-  handleMouseOut(index) {
+  _onMouseOut(index) {
     this.setState({ selectedIndex: -1 });
   }
 
@@ -82,16 +82,16 @@ class MultiComplete extends React.Component {
         <input type="text"
           onChange={this._onChange}
           onKeyDown={this._onKeyDown}
-          onClick={this._onClick}
           value={this.state.str}
         />
         <div>
           {this.state.matches.map((item, index) =>
             <ListItem key={item}
               selected={this.state.selectedIndex === index}
-              handleClick={this.handleClick.bind(this, index)}
-              handleMouseOver={this.handleMouseOver.bind(this, index)}
-              handleMouseOut={this.handleMouseOut.bind(this, index)} >
+              onClick={this._onClick.bind(this, index)}
+              onMouseOver={this._onMouseOver.bind(this, index)}
+              onMouseOut={this._onMouseOut.bind(this, index)} 
+            >
               {item}
             </ListItem>)}
         </div>
