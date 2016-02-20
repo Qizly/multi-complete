@@ -5,3 +5,9 @@ body {
   background-color: #f0f0f0;
   cursor: pointer;
 }
+
+.token {
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+
+}

@@ -8,8 +8,8 @@ const key = {
 const ListItem = ({onClick, onMouseOver, onMouseOut, selected, children}) => (
   <div onClick={onClick} 
     onMouseOver={onMouseOver}
-    onMouseOut={onMouseOut} 
-    className={selected ? 'selected' : ''} 
+    onMouseOut={onMouseOut}
+    className={selected ? 'selected' : ''}
   >
     {children}
   </div>
@@ -29,7 +29,7 @@ ListItem.propTypes = {
       );
     }
   }
-}
+};
 
 class MultiComplete extends React.Component {
   constructor(props) {
@@ -37,8 +37,10 @@ class MultiComplete extends React.Component {
 
     this.state = {
       str: '',
+      list: this.props.list.slice(),
       matches: [],
-      selectedIndex: -1
+      selectedIndex: -1,
+      selects: []
     };
 
     this._onChange = this._onChange.bind(this);
@@ -48,10 +50,10 @@ class MultiComplete extends React.Component {
   _onChange(e) {
     let str = e.target.value;
     let matches = [];
-    let {list} = this.props;
+    //let {list} = this.props;
 
     if (str.length > 0) {
-      matches = list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
+      matches = this.state.list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
     }
     this.setState({ str, matches, selectedIndex: -1 });
   }
@@ -87,10 +89,17 @@ class MultiComplete extends React.Component {
   }
 
   _onClick(index) {
+    let match = this.state.matches[index];
+    let listIndex = this.state.list.indexOf(match);
+    let list = this.state.list.slice(0, listIndex).concat(this.state.list.slice(listIndex + 1));
+    let selects = [...this.state.selects, match];
+
     this.setState({
-      str: this.state.matches[index],
-      matches: []
-    });
+      str: '',
+      list: list,
+      matches: [],
+      selects: selects
+    }, () => this._input.focus());
   }
   
   _onMouseOver(index) {
@@ -101,15 +110,26 @@ class MultiComplete extends React.Component {
     this.setState({ selectedIndex: -1 });
   }
 
+  _onInputContainerClick() {
+    this._input.focus();
+  }
+
   render() {
+    const styles = {position:'relative', font:'14px "Helvetica Neue", Helvetica, Arial, sans-serif'};
     return (
-      <div>
-        <input type="text"
-          onChange={this._onChange}
-          onKeyDown={this._onKeyDown}
-          value={this.state.str}
-        />
-        <div>
+      <div style={styles} >
+        <div onClick={this._onInputContainerClick.bind(this)}
+             style={{width:300, border:'1px solid #ddd', cursor:'text', float:'left'}}>
+          {this.state.selects.map(selectedItem => <div style={{float:'left'}} className="token" key={selectedItem}>{selectedItem}</div>)}
+          <input type="text" style={{border:'none', outline:'none', padding:'2px 8px', fontSize:14, width:30}}
+            onChange={this._onChange}
+            onKeyDown={this._onKeyDown}
+            value={this.state.str}
+            ref={ref => this._input = ref}
+          />
+        </div>
+
+        <div style={{position:'absolute', top:40, width:300}}>
           {this.state.matches.map((item, index) =>
             <ListItem key={item}
               selected={this.state.selectedIndex === index}
