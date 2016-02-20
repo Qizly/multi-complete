@@ -31,13 +31,19 @@ ListItem.propTypes = {
   }
 };
 
+const Token = ({handleDelete, children}) => (
+  <div style={{float:'left'}} className="token">
+    <span onClick={handleDelete} style={{display:'inline-block'}}>X</span>
+    {children}
+  </div>
+);
+
 class MultiComplete extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       str: '',
-      list: this.props.list.slice(),
       matches: [],
       selectedIndex: -1,
       selects: []
@@ -50,10 +56,10 @@ class MultiComplete extends React.Component {
   _onChange(e) {
     let str = e.target.value;
     let matches = [];
-    //let {list} = this.props;
+    let {list} = this.props;
 
     if (str.length > 0) {
-      matches = this.state.list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
+      matches = list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
     }
     this.setState({ str, matches, selectedIndex: -1 });
   }
@@ -90,15 +96,11 @@ class MultiComplete extends React.Component {
 
   _onClick(index) {
     let match = this.state.matches[index];
-    let listIndex = this.state.list.indexOf(match);
-    let list = this.state.list.slice(0, listIndex).concat(this.state.list.slice(listIndex + 1));
-    let selects = [...this.state.selects, match];
 
     this.setState({
       str: '',
-      list: list,
       matches: [],
-      selects: selects
+      selects: this.state.selects.indexOf(match) === -1 ? [...this.state.selects, match] : this.state.selects
     }, () => this._input.focus());
   }
   
@@ -114,13 +116,20 @@ class MultiComplete extends React.Component {
     this._input.focus();
   }
 
+  handleDelete(item, index) {
+    this.setState({
+
+      selects: this.state.selects.slice(0, index).concat(this.state.selects.slice(index + 1))
+    });
+  }
+
   render() {
     const styles = {position:'relative', font:'14px "Helvetica Neue", Helvetica, Arial, sans-serif'};
     return (
       <div style={styles} >
         <div onClick={this._onInputContainerClick.bind(this)}
              style={{width:300, border:'1px solid #ddd', cursor:'text', float:'left'}}>
-          {this.state.selects.map(selectedItem => <div style={{float:'left'}} className="token" key={selectedItem}>{selectedItem}</div>)}
+          {this.state.selects.map((selectedItem, index) => <Token handleDelete={this.handleDelete.bind(this, selectedItem, index)} key={selectedItem}>{selectedItem}</Token>)}
           <input type="text" style={{border:'none', outline:'none', padding:'2px 8px', fontSize:14, width:30}}
             onChange={this._onChange}
             onKeyDown={this._onKeyDown}
