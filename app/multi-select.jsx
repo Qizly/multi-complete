@@ -59,7 +59,7 @@ class MultiComplete extends React.Component {
       str: '',
       matches: [],
       selects: [],
-      selectedIndex: -1
+      hoveredIndex: -1
     };
 
     this.onChange = this.onChange.bind(this);
@@ -78,32 +78,36 @@ class MultiComplete extends React.Component {
       matches = list.filter(item => item.match(regex));
     }
 
-    this.setState({ str, matches, selectedIndex: -1 });
+    this.setState({ str, matches, hoveredIndex: -1 });
   }
 
   onKeyDown(e) {
     const keyCode = e.keyCode;
-    const selectedIndex = this.state.selectedIndex;
+    const hoveredIndex = this.state.hoveredIndex;
+    const matches = this.state.matches;
+    const lastIndex = matches.length - 1;
+    const selects = this.state.selects;
+    const str = this.state.str;
 
-    if (selectedIndex > 0 && keyCode === key.up) {
+    if (keyCode === key.up) {
       e.preventDefault();
       this.setState({ 
-        selectedIndex: selectedIndex - 1 
+        hoveredIndex: hoveredIndex > 0 ? (hoveredIndex - 1) : lastIndex
       });
       
-    } else if (selectedIndex < this.state.matches.length - 1 && (keyCode === key.down || keyCode === key.tab)) {
+    } else if (keyCode === key.down || keyCode === key.tab) {
       e.preventDefault();
       this.setState({
-        selectedIndex: selectedIndex + 1
+        hoveredIndex: hoveredIndex < lastIndex ? (hoveredIndex + 1) : 0
       });
       
     } else if (e.key === 'Enter') {
-      if (selectedIndex !== -1) {
-        this.addToList(this.state.matches[selectedIndex]);
+      if (hoveredIndex !== -1) {
+        this.addToList(matches[hoveredIndex]);
       }
-    } else if (this.state.str.length === 0 && keyCode === key.delete) {
+    } else if (str.length === 0 && keyCode === key.delete) {
       this.setState({
-        selects: this.state.selects.slice(0, -1)
+        selects: selects.slice(0, -1)
       });
     }
   }
@@ -113,12 +117,12 @@ class MultiComplete extends React.Component {
     this.addToList(match);
   }
   
-  onMouseOver(index) {
-    this.setState({ selectedIndex: index });
+  onMouseOver(hoveredIndex) {
+    this.setState({ hoveredIndex });
   }
   
-  onMouseOut(index) {
-    this.setState({ selectedIndex: -1 });
+  onMouseOut() {
+    this.setState({ hoveredIndex: -1 });
   }
 
   onInputContainerClick() {
@@ -126,16 +130,18 @@ class MultiComplete extends React.Component {
   }
 
   handleDelete(item, index) {
+    const selects = this.state.selects;
     this.setState({
-      selects: this.state.selects.slice(0, index).concat(this.state.selects.slice(index + 1))
+      selects: selects.slice(0, index).concat(selects.slice(index + 1))
     });
   }
 
   addToList(item) {
+    const selects = this.state.selects;
     this.setState({
       str: '',
       matches: [],
-      selects: this.state.selects.indexOf(item) === -1 ? [...this.state.selects, item] : this.state.selects
+      selects: selects.indexOf(item) === -1 ? [...selects, item] : selects
     }, () => this.input.focus());
   }
 
@@ -158,7 +164,7 @@ class MultiComplete extends React.Component {
         <div style={{position:'absolute', top:40, width:300}}>
           {this.state.matches.map((item, index) =>
             <ListItem key={item}
-              selected={this.state.selectedIndex === index}
+              selected={this.state.hoveredIndex === index}
               onClick={this.onClick.bind(this, index)}
               onMouseOver={this.onMouseOver.bind(this, index)}
               onMouseOut={this.onMouseOut.bind(this, index)}
