@@ -2,8 +2,13 @@ import React from 'react';
 
 const key = {
   up: 38,
-  down: 40
+  down: 40,
+  delete: 8,
+  tab: 9
 };
+
+const minInputWidth = 20;
+const charWidth = 6;
 
 function escapeString(str) {
   return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -38,7 +43,6 @@ ListItem.propTypes = {
     }
   }
 };
-
 
 const Token = ({handleDelete, children}) => (
   <div style={{float:'left'}} className="token">
@@ -88,7 +92,7 @@ class MultiComplete extends React.Component {
         selectedIndex: selectedIndex - 1 
       });
       
-    } else if (selectedIndex < this.state.matches.length - 1 && keyCode === key.down) {
+    } else if (selectedIndex < this.state.matches.length - 1 && (keyCode === key.down || keyCode === key.tab)) {
       
       e.preventDefault();
       this.setState({
@@ -98,23 +102,21 @@ class MultiComplete extends React.Component {
     } else if (e.key === 'Enter') {
       
       if (selectedIndex !== -1) {
-        this.setState({
-          str: this.state.matches[selectedIndex],
-          matches: []
-        });
+        this.addToList(this.state.matches[selectedIndex]);
       }
-      e.target.blur();
+    } else if (this.state.str.length === 0 && keyCode === key.delete) {
+      this.setState({
+        selects: this.state.selects.slice(0, -1)
+      });
+
     }
+          console.log(this.state.str.length);
+      console.log(keyCode)
   }
 
   _onClick(index) {
     let match = this.state.matches[index];
-
-    this.setState({
-      str: '',
-      matches: [],
-      selects: this.state.selects.indexOf(match) === -1 ? [...this.state.selects, match] : this.state.selects
-    }, () => this._input.focus());
+    this.addToList(match);
   }
   
   _onMouseOver(index) {
@@ -135,14 +137,23 @@ class MultiComplete extends React.Component {
     });
   }
 
+  addToList(item) {
+    this.setState({
+      str: '',
+      matches: [],
+      selects: this.state.selects.indexOf(item) === -1 ? [...this.state.selects, item] : this.state.selects
+    }, () => this._input.focus());
+  }
+
   render() {
     const styles = {position:'relative', font:'14px "Helvetica Neue", Helvetica, Arial, sans-serif'};
+    const inputStyles = {display:'block', border:'none', outline:'none', padding:'2px 8px', fontSize:14, width:this.state.str.length*charWidth+minInputWidth};
     return (
       <div style={styles} >
         <div onClick={this._onInputContainerClick.bind(this)}
              style={{width:300, border:'1px solid #ddd', cursor:'text', float:'left'}}>
           {this.state.selects.map((selectedItem, index) => <Token handleDelete={this.handleDelete.bind(this, selectedItem, index)} key={selectedItem}>{selectedItem}</Token>)}
-          <input type="text" style={{border:'none', outline:'none', padding:'2px 8px', fontSize:14, width:30}}
+          <input type="text" style={inputStyles}
             onChange={this._onChange}
             onKeyDown={this._onKeyDown}
             value={this.state.str}
