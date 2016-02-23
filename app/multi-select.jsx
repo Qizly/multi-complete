@@ -62,14 +62,14 @@ class MultiComplete extends React.Component {
       selectedIndex: -1
     };
 
-    this._onChange = this._onChange.bind(this);
-    this._onKeyDown = this._onKeyDown.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
-  _onChange(e) {
+  onChange(e) {
     let str = e.target.value;
     let matches = [];
-    let {list} = this.props;
+    const {list} = this.props;
     const regex = new RegExp('^' + str, 'i');
     
     str = escapeString(str).trim();
@@ -81,26 +81,23 @@ class MultiComplete extends React.Component {
     this.setState({ str, matches, selectedIndex: -1 });
   }
 
-  _onKeyDown(e) {
-    let keyCode = e.keyCode;
-    let selectedIndex = this.state.selectedIndex;
+  onKeyDown(e) {
+    const keyCode = e.keyCode;
+    const selectedIndex = this.state.selectedIndex;
 
     if (selectedIndex > 0 && keyCode === key.up) {
-      
       e.preventDefault();
       this.setState({ 
         selectedIndex: selectedIndex - 1 
       });
       
     } else if (selectedIndex < this.state.matches.length - 1 && (keyCode === key.down || keyCode === key.tab)) {
-      
       e.preventDefault();
       this.setState({
         selectedIndex: selectedIndex + 1
       });
       
     } else if (e.key === 'Enter') {
-      
       if (selectedIndex !== -1) {
         this.addToList(this.state.matches[selectedIndex]);
       }
@@ -108,27 +105,24 @@ class MultiComplete extends React.Component {
       this.setState({
         selects: this.state.selects.slice(0, -1)
       });
-
     }
-          console.log(this.state.str.length);
-      console.log(keyCode)
   }
 
-  _onClick(index) {
-    let match = this.state.matches[index];
+  onClick(index) {
+    const match = this.state.matches[index];
     this.addToList(match);
   }
   
-  _onMouseOver(index) {
+  onMouseOver(index) {
     this.setState({ selectedIndex: index });
   }
   
-  _onMouseOut(index) {
+  onMouseOut(index) {
     this.setState({ selectedIndex: -1 });
   }
 
-  _onInputContainerClick() {
-    this._input.focus();
+  onInputContainerClick() {
+    this.input.focus();
   }
 
   handleDelete(item, index) {
@@ -142,7 +136,7 @@ class MultiComplete extends React.Component {
       str: '',
       matches: [],
       selects: this.state.selects.indexOf(item) === -1 ? [...this.state.selects, item] : this.state.selects
-    }, () => this._input.focus());
+    }, () => this.input.focus());
   }
 
   render() {
@@ -150,14 +144,14 @@ class MultiComplete extends React.Component {
     const inputStyles = {display:'block', border:'none', outline:'none', padding:'2px 8px', fontSize:14, width:this.state.str.length*charWidth+minInputWidth};
     return (
       <div style={styles} >
-        <div onClick={this._onInputContainerClick.bind(this)}
+        <div onClick={this.onInputContainerClick.bind(this)}
              style={{width:300, border:'1px solid #ddd', cursor:'text', float:'left'}}>
           {this.state.selects.map((selectedItem, index) => <Token handleDelete={this.handleDelete.bind(this, selectedItem, index)} key={selectedItem}>{selectedItem}</Token>)}
           <input type="text" style={inputStyles}
-            onChange={this._onChange}
-            onKeyDown={this._onKeyDown}
+            onChange={this.onChange}
+            onKeyDown={this.onKeyDown}
             value={this.state.str}
-            ref={ref => this._input = ref}
+            ref={ref => this.input = ref}
           />
         </div>
 
@@ -165,9 +159,9 @@ class MultiComplete extends React.Component {
           {this.state.matches.map((item, index) =>
             <ListItem key={item}
               selected={this.state.selectedIndex === index}
-              onClick={this._onClick.bind(this, index)}
-              onMouseOver={this._onMouseOver.bind(this, index)}
-              onMouseOut={this._onMouseOut.bind(this, index)} 
+              onClick={this.onClick.bind(this, index)}
+              onMouseOver={this.onMouseOver.bind(this, index)}
+              onMouseOut={this.onMouseOut.bind(this, index)}
             >
             {item}
             </ListItem>)}
