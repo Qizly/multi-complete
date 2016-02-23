@@ -33,6 +33,13 @@ const common = {
         // more custom, pass a path to it. I.e, bable? cacheDirectory=<path>
         loaders: ['babel?cacheDirectory'],
         include: PATHS.app
+      },
+      {
+        test:   /\.(png|gif|jpe?g|svg)$/i,
+        loader: 'url',
+        query: {
+          limit: 10000
+        }
       }
     ]
   }

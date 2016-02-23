@@ -5,6 +5,10 @@ const key = {
   down: 40
 };
 
+function escapeString(str) {
+  return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
+
 const ListItem = ({onClick, onMouseOver, onMouseOut, selected, children}) => (
   <div onClick={onClick} 
     onMouseOver={onMouseOver}
@@ -15,6 +19,10 @@ const ListItem = ({onClick, onMouseOver, onMouseOut, selected, children}) => (
   </div>
 );
 
+/**
+ * onClick: 
+ * @type {Object}
+ */
 ListItem.propTypes = {
   onClick: React.PropTypes.func.isRequired,
   onMouseOver: React.PropTypes.func.isRequired,
@@ -31,9 +39,10 @@ ListItem.propTypes = {
   }
 };
 
+
 const Token = ({handleDelete, children}) => (
   <div style={{float:'left'}} className="token">
-    <span onClick={handleDelete} style={{display:'inline-block'}}>X</span>
+    <span className="delete-icon" onClick={handleDelete} style={{display:'inline-block', cursor:'pointer'}}></span>
     {children}
   </div>
 );
@@ -45,8 +54,8 @@ class MultiComplete extends React.Component {
     this.state = {
       str: '',
       matches: [],
-      selectedIndex: -1,
-      selects: []
+      selects: [],
+      selectedIndex: -1
     };
 
     this._onChange = this._onChange.bind(this);
@@ -57,10 +66,14 @@ class MultiComplete extends React.Component {
     let str = e.target.value;
     let matches = [];
     let {list} = this.props;
+    const regex = new RegExp('^' + str, 'i');
+    
+    str = escapeString(str).trim();
 
     if (str.length > 0) {
-      matches = list.filter(item => item.toLowerCase().indexOf(str.toLowerCase()) !== -1);
+      matches = list.filter(item => item.match(regex));
     }
+
     this.setState({ str, matches, selectedIndex: -1 });
   }
 
@@ -118,7 +131,6 @@ class MultiComplete extends React.Component {
 
   handleDelete(item, index) {
     this.setState({
-
       selects: this.state.selects.slice(0, index).concat(this.state.selects.slice(index + 1))
     });
   }
