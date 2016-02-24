@@ -1,4 +1,21 @@
-body {
+.multi-select-container {
+  position: relative;
+  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.multi-select-container-input {
+  display: block;
+  border: none;
+  outline: none;
+  padding: 2px 8px;
+  font-size:14px;
+}
+
+.multi-select-clickable-box {
+  width: 300px;
+  border: 1px solid #ddd;
+  cursor: text;
+  float: left;
 }
 
 .selected, .hovered {
@@ -6,10 +23,16 @@ body {
   cursor: pointer;
 }
 
+.tokens {
+  position: absolute;
+  top: 40px;
+  width: 300px;
+}
+
 .token {
   padding: 2px 4px;
   border: 1px solid #ddd;
-
+  float: left;
 }
 
 .delete-icon {
@@ -19,4 +42,5 @@ body {
   padding: 2px;
   background: url(./img/delete-icon.svg) no-repeat 50% 50%;
   background-size: 7px 7px;
+  cursor: pointer;
 }

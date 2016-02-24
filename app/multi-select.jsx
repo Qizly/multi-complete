@@ -45,8 +45,8 @@ ListItem.propTypes = {
 };
 
 const Token = ({handleDelete, children}) => (
-  <div style={{float:'left'}} className="token">
-    <span className="delete-icon" onClick={handleDelete} style={{display:'inline-block', cursor:'pointer'}}></span>
+  <div className="token">
+    <span className="delete-icon" onClick={handleDelete}></span>
     {children}
   </div>
 );
@@ -146,14 +146,16 @@ class MultiComplete extends React.Component {
   }
 
   render() {
-    const styles = {position:'relative', font:'14px "Helvetica Neue", Helvetica, Arial, sans-serif'};
-    const inputStyles = {display:'block', border:'none', outline:'none', padding:'2px 8px', fontSize:14, width:this.state.str.length*charWidth+minInputWidth};
+    const inputStyles = {width: this.state.str.length*charWidth+minInputWidth};
     return (
-      <div style={styles} >
-        <div onClick={this.onInputContainerClick.bind(this)}
-             style={{width:300, border:'1px solid #ddd', cursor:'text', float:'left'}}>
-          {this.state.selects.map((selectedItem, index) => <Token handleDelete={this.handleDelete.bind(this, selectedItem, index)} key={selectedItem}>{selectedItem}</Token>)}
-          <input type="text" style={inputStyles}
+      <div className="multi-select-container">
+        <div className="multi-select-clickable-box"
+          onClick={this.onInputContainerClick.bind(this)} >
+          {this.state.selects.map((selectedItem, index) => (
+            <Token handleDelete={this.handleDelete.bind(this, selectedItem, index)}
+              key={selectedItem}>{selectedItem}</Token>)
+          )}
+          <input type="text" style={inputStyles} className="multi-select-container-input"
             onChange={this.onChange}
             onKeyDown={this.onKeyDown}
             value={this.state.str}
@@ -161,7 +163,7 @@ class MultiComplete extends React.Component {
           />
         </div>
 
-        <div style={{position:'absolute', top:40, width:300}}>
+        <div className="tokens">
           {this.state.matches.map((item, index) =>
             <ListItem key={item}
               selected={this.state.hoveredIndex === index}
