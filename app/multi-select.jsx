@@ -1,14 +1,13 @@
 import React from 'react';
 
+const minInputWidth = 20;
+const charWidth = 6;
 const key = {
   up: 38,
   down: 40,
   delete: 8,
   tab: 9
 };
-
-const minInputWidth = 20;
-const charWidth = 6;
 
 function escapeString(str) {
   return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -18,8 +17,7 @@ const ListItem = ({onClick, onMouseOver, onMouseOut, selected, children}) => (
   <div onClick={onClick} 
     onMouseOver={onMouseOver}
     onMouseOut={onMouseOut}
-    className={selected ? 'selected' : ''}
-  >
+    className={selected ? 'selected' : ''}>
     {children}
   </div>
 );
@@ -146,7 +144,7 @@ class MultiComplete extends React.Component {
   }
 
   render() {
-    const inputStyles = {width: this.state.str.length*charWidth+minInputWidth};
+    const inputStyles = {width: this.state.selects.length > 0 ? this.state.str.length * charWidth + minInputWidth : '100%'};
     return (
       <div className="multi-select-container">
         <div className="multi-select-clickable-box"
@@ -160,6 +158,7 @@ class MultiComplete extends React.Component {
             onKeyDown={this.onKeyDown}
             value={this.state.str}
             ref={ref => this.input = ref}
+            placeholder={this.state.selects.length > 0 ? '' : this.props.placeholder}
           />
         </div>
 
