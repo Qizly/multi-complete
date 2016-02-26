@@ -1,5 +1,6 @@
 .multi-select-container {
-  position: relative;
+  display: flex;
+  flex-direction: column;
   font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -24,8 +25,6 @@
 }
 
 .tokens {
-  position: absolute;
-  top: 40px;
   width: 300px;
 }
 

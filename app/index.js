@@ -8,5 +8,5 @@ var list = ['Andy', 'Arlene', 'Billy', 'Bob', 'Candy', 'Daisy', 'Harry', 'Inga',
 main();
 
 function main() {
-    ReactDOM.render(<MultiSelect list={list} placeholder="Enter a term to search..." />, document.getElementById('app'));
+  ReactDOM.render(<MultiSelect list={list} placeholder="Enter a term to search..." />, document.getElementById('app'));
 }

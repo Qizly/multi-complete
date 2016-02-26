@@ -1,4 +1,6 @@
 import React from 'react';
+import Token from './token.jsx';
+import ListItem from './list-item.jsx';
 
 const minInputWidth = 20;
 const charWidth = 6;
@@ -11,45 +13,9 @@ const key = {
 
 function escapeString(str) {
   return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-};
+}
 
-const ListItem = ({onClick, onMouseOver, onMouseOut, selected, children}) => (
-  <div onClick={onClick} 
-    onMouseOver={onMouseOver}
-    onMouseOut={onMouseOut}
-    className={selected ? 'selected' : ''}>
-    {children}
-  </div>
-);
-
-/**
- * onClick: 
- * @type {Object}
- */
-ListItem.propTypes = {
-  onClick: React.PropTypes.func.isRequired,
-  onMouseOver: React.PropTypes.func.isRequired,
-  onMouseOut: React.PropTypes.func.isRequired,
-  selected: React.PropTypes.bool.isRequired,
-  children: function (props, propName, componentName) {
-    let prop = props[propName];
-
-    if (React.Children.count(prop) !== 1 || typeof prop !== 'string') {
-      return new Error(
-        `\`${componentName}\` should have a single child of type string`
-      );
-    }
-  }
-};
-
-const Token = ({handleDelete, children}) => (
-  <div className="token">
-    <span className="delete-icon" onClick={handleDelete}></span>
-    {children}
-  </div>
-);
-
-class MultiComplete extends React.Component {
+class MultiSelect extends React.Component {
   constructor(props) {
     super(props);
 
@@ -144,7 +110,7 @@ class MultiComplete extends React.Component {
   }
 
   render() {
-    const inputStyles = {width: this.state.selects.length > 0 ? this.state.str.length * charWidth + minInputWidth : '100%'};
+    const inputStyles = {width: this.state.selects.length > 0 ? this.state.str.length * charWidth + minInputWidth : '90%'};
     return (
       <div className="multi-select-container">
         <div className="multi-select-clickable-box"
@@ -168,18 +134,18 @@ class MultiComplete extends React.Component {
               selected={this.state.hoveredIndex === index}
               onClick={this.onClick.bind(this, index)}
               onMouseOver={this.onMouseOver.bind(this, index)}
-              onMouseOut={this.onMouseOut.bind(this, index)}
-            >
-            {item}
-            </ListItem>)}
+              onMouseOut={this.onMouseOut.bind(this, index)}>
+              {item}
+            </ListItem>)
+          }
         </div>
       </div>
     );
   }
 }
 
-MultiComplete.propTypes = {
+MultiSelect.propTypes = {
   list: React.PropTypes.array.isRequired
 };
 
-export default MultiComplete;
+export default MultiSelect;
