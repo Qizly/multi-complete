@@ -1,15 +1,14 @@
 {
   "name": "multi-select",
   "version": "1.0.0",
-  "description": "Simple app to showcase the power of React.js",
+  "description": "Autocomplete with multiple tokens",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server --devtool eval --progress --colors --hot --content-base build"
   },
   "keywords": [
-    "reactjs",
-    "tv"
+
   ],
   "author": "Yong Lee",
   "license": "ISC",
@@ -29,6 +28,10 @@
     "css-loader": "^0.23.1",
     "file-loader": "^0.8.5",
     "html-webpack-plugin": "^2.7.1",
+    "karma": "^0.13.21",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-jasmine": "^0.3.7",
+    "karma-webpack": "^1.7.0",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.12.11",
